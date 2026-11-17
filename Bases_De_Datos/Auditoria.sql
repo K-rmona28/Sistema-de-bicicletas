@@ -3,6 +3,7 @@
 -- Motor: SQL Server
 -- Idempotente: se puede ejecutar varias veces sin error.
 -- Debe ejecutarse ANTES del trigger TR_CopiarAuditoria de la BD general.
+-- uso: para crear la base de datos de auditoría y la tabla de registro de auditoría.
 -- ============================================================
 
 IF DB_ID(N'AuditoriaCycleOn') IS NULL
