@@ -1,0 +1,96 @@
+<h1 class="title">Cycleon</h1>
+
+<div class="container" [class.right-panel-active]="rightPanelActive()">
+
+  <!-- SIGN UP -->
+  <div class="form-container sign-up-container">
+    <form novalidate (submit)="$event.preventDefault(); register()">
+      <h1>Create Account</h1>
+      <div class="social-container">
+        <a href="#" class="social"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="#" class="social"><i class="fa-brands fa-google"></i></a>
+        <a href="#" class="social"><i class="fa-brands fa-linkedin-in"></i></a>
+      </div>
+      <span>or use your email for registration</span>
+
+      <div class="input-box">
+        <i class="fa-solid fa-user"></i>
+        <input type="text" placeholder="FullName" (input)="regFullName.set($any($event.target).value)" />
+      </div>
+      <div class="input-box">
+        <i class="fa-solid fa-envelope"></i>
+        <input type="email" placeholder="Email" (input)="regEmail.set($any($event.target).value)" />
+      </div>
+      <div class="input-box">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" placeholder="Password" (input)="regPassword.set($any($event.target).value)" />
+      </div>
+
+      @if (rightPanelActive() && errorMsg()) {
+      <small style="color: #e53935; margin: 6px 0;">{{ errorMsg() }}</small>
+      }
+
+      <button type="submit" [disabled]="loading()">
+        {{ loading() ? 'Creating...' : 'Sign Up' }}
+      </button>
+    </form>
+  </div>
+
+  <!-- SIGN IN -->
+  <div class="form-container sign-in-container">
+    <form novalidate (submit)="$event.preventDefault(); login()">
+      <h1>Sign in</h1>
+      <div class="social-container">
+        <a href="#" class="social"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="#" class="social"><i class="fa-brands fa-google"></i></a>
+        <a href="#" class="social"><i class="fa-brands fa-linkedin-in"></i></a>
+      </div>
+      <span>or use your account</span>
+
+      <div class="input-box">
+        <i class="fa-solid fa-envelope"></i>
+        <input type="email" placeholder="Email" [value]="emailText()"
+          (input)="emailText.set($any($event.target).value)" />
+      </div>
+      <div class="input-box">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" placeholder="Password" (input)="passwordText.set($any($event.target).value)" />
+      </div>
+
+      @if (!rightPanelActive() && errorMsg()) {
+      <small style="color: #e53935; margin: 6px 0;">{{ errorMsg() }}</small>
+      }
+      @if (!rightPanelActive() && successMsg()) {
+      <small style="color: #2e7d32; margin: 6px 0;">{{ successMsg() }}</small>
+      }
+
+      <a href="#">Forgot your password?</a>
+      <button type="submit" [disabled]="loading()">
+        {{ loading() ? 'Signing in...' : 'Sign In' }}
+      </button>
+    </form>
+  </div>
+
+  <!-- OVERLAY -->
+  <div class="overlay-container">
+    <div class="overlay">
+      <div class="overlay-panel overlay-left">
+        <h1>Welcome Back!</h1>
+        <p>To keep connected with us please login with your personal info</p>
+        @if (errorMsg(); as err) {
+        <div class="login-alert" role="alert">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>{{ err }}</span>
+        </div>
+        }
+        <button type="button" class="ghost" (click)="rightPanelActive.set(false); errorMsg.set(null)">Sign In</button>
+      </div>
+      <div class="overlay-panel overlay-right">
+        <h1>Hello, Friend!</h1>
+        <p>Enter your personal details and start journey with us</p>
+        <button type="button" class="ghost" (click)="rightPanelActive.set(true); errorMsg.set(null)">Sign Up</button>
+      </div>
+    </div>
+  </div>
+
+</div>

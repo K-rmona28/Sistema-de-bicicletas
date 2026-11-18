@@ -1,0 +1,48 @@
+<nav class="sidebar" [class.collapsed]="collapsed()">
+
+  <div class="top-row">
+    <div class="brand-row" role="button" tabindex="0" title="Mostrar / ocultar menú"
+         (click)="toggle()" (keydown.enter)="toggle()">
+  <div class="brand-icon"><span>C</span></div>
+      <div class="brand-text">
+        <p class="brand-name">Cycleon</p>
+        <p class="brand-sub">Panel de administración</p>
+      </div>
+    </div>
+
+    <button type="button" class="expand-btn" aria-label="Contraer menú" (click)="toggle()">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+  </div>
+
+  @for (g of groups; track g.label) {
+    @if (!$first) { <div class="divider"></div> }
+
+    <div class="section-label">{{ g.label }}</div>
+
+    @for (it of g.items; track it.path) {
+      <a class="nav-item" [routerLink]="it.path" routerLinkActive="active" [title]="it.label">
+        <i class="fa-solid" [class]="it.icon"></i>
+        <span class="label" [style.transition-delay.s]="it.delay">{{ it.label }}</span>
+        @if (it.count) { <span class="count">{{ it.count }}</span> }
+      </a>
+    }
+  }
+
+  <div class="bottom">
+    <div class="divider"></div>
+
+    @for (it of system; track it.path) {
+      <a class="nav-item" [routerLink]="it.path" routerLinkActive="active" [title]="it.label">
+        <i class="fa-solid" [class]="it.icon"></i>
+        <span class="label" [style.transition-delay.s]="it.delay">{{ it.label }}</span>
+      </a>
+    }
+
+    <button type="button" class="nav-item logout" title="Cerrar sesión" (click)="logout()">
+      <i class="fa-solid fa-right-from-bracket"></i>
+      <span class="label" [style.transition-delay.s]="logoutDelay">Cerrar sesión</span>
+    </button>
+  </div>
+
+</nav>

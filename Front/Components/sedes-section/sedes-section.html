@@ -1,0 +1,38 @@
+<div class="wrap">
+  <div class="list">
+    <h3>Nuestras sedes</h3>
+    <p class="sub">Recoge y devuelve en la que te quede más cerca.</p>
+
+    @for (s of sedes(); track s.id) {
+      <button
+        type="button"
+        class="sede"
+        [class.on]="s.id === active().id"
+        (mouseenter)="select(s)"
+        (click)="select(s)"
+      >
+        <span class="dot"></span>
+        <span class="name">{{ s.name }}</span>
+        <span class="zone">{{ s.zone }}</span>
+      </button>
+    }
+  </div>
+
+  <!-- El @for con un solo elemento reinicia la animación en cada cambio -->
+  @for (s of [active()]; track s.id) {
+    <article class="panel">
+      <span class="tag">{{ s.zone }}</span>
+      <h4>{{ s.name }}</h4>
+
+      <ul>
+        <li><i class="fa-solid fa-location-dot"></i> {{ s.address }}</li>
+        <li><i class="fa-solid fa-clock"></i> {{ s.schedule }}</li>
+        <li><i class="fa-solid fa-bicycle"></i> {{ s.bikesAvailable }} bicis disponibles</li>
+      </ul>
+
+      <a class="go" [href]="mapsUrl(s)" target="_blank" rel="noopener noreferrer">
+        Cómo llegar <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </article>
+  }
+</div>

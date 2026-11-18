@@ -1,0 +1,74 @@
+<div class="report">
+
+  <button type="button" class="report__close" aria-label="Cerrar" (click)="close()">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+
+  <header class="report__header">
+    <span class="report__tag">Soporte</span>
+    <h2>Reportar problema</h2>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+    <!-- Motivo: columna de opciones -->
+    <fieldset class="reasons" [class.error]="invalid('reason')">
+      <legend>¿Qué deseas reportar?</legend>
+
+      @for (r of reasons; track r.value) {
+        <label class="reason" [class.on]="form.controls.reason.value === r.value">
+          <input type="radio" formControlName="reason" [value]="r.value" />
+          <i class="fa-solid" [class]="r.icon"></i>
+          <span>{{ r.label }}</span>
+          <em class="dot"></em>
+        </label>
+      }
+
+      @if (invalid('reason')) { <small>Selecciona una opción</small> }
+    </fieldset>
+
+    <label class="field" [class.error]="invalid('bike')">
+      <span>Bicicleta</span>
+      <select formControlName="bike">
+        <option value="" disabled>Elige la bicicleta</option>
+        @for (b of bikes; track b) {
+          <option [value]="b">{{ b }}</option>
+        }
+      </select>
+      @if (invalid('bike')) { <small>Elige una bicicleta</small> }
+    </label>
+
+    <label class="field" [class.error]="invalid('description')">
+      <span>Descripción</span>
+      <textarea formControlName="description" rows="4" placeholder="Cuéntanos qué ocurrió..."></textarea>
+      @if (invalid('description')) { <small>Describe el problema (mínimo 10 caracteres)</small> }
+    </label>
+
+    <!-- Evidencia -->
+    <div class="field">
+      <span>Evidencia (opcional)</span>
+
+      <label class="attach">
+        <i class="fa-solid fa-paperclip"></i> Adjuntar evidencia
+        <input type="file" multiple accept="image/*,video/*,.pdf" (change)="onFiles($event)" hidden />
+      </label>
+
+      @if (files().length) {
+        <ul class="files">
+          @for (f of files(); track $index) {
+            <li>
+              <i class="fa-solid fa-file"></i>
+              <span>{{ f.name }}</span>
+              <button type="button" aria-label="Quitar archivo" (click)="removeFile($index)">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+
+    <button type="submit" class="report__submit">Enviar reporte</button>
+  </form>
+
+</div>

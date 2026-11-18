@@ -1,0 +1,115 @@
+<div class="panel">
+  <div class="container">
+
+    <div class="container-header">
+      <div>
+        <h2>Reportes de usuarios</h2>
+        <p>Revisa, gestiona y resuelve los problemas reportados</p>
+      </div>
+    </div>
+
+    <!-- Resumen -->
+    <section class="stats">
+      @for (s of stats(); track s.label; let i = $index) {
+        <article class="stat" [attr.data-tone]="s.tone" [style.--i]="i">
+          <span class="stat__icon"><i class="fa-solid" [class]="s.icon"></i></span>
+          <div>
+            <strong>{{ s.value }}</strong>
+            <span>{{ s.label }}</span>
+          </div>
+        </article>
+      }
+    </section>
+
+    <!-- Filtro por estado -->
+    <div class="tabs">
+      @for (t of tabs(); track t.label) {
+        <button type="button" [class.on]="tab() === t.label" (click)="tab.set(t.label)">
+          {{ t.label }} <b>{{ t.count }}</b>
+        </button>
+      }
+    </div>
+
+    <mat-form-field appearance="outline" class="filter" subscriptSizing="dynamic">
+      <mat-label>Filtrar</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ej. Trail, Laura, Robo" #input>
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <div class="table-container">
+      <table mat-table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+          <td mat-cell *matCellDef="let row">#{{ row.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.type }}
+            @if (urgent(row)) { <span class="urgent" title="Urgente">Urgente</span> }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="bike">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Bicicleta</th>
+          <td mat-cell *matCellDef="let row">
+            <strong>{{ row.bikeCode }}</strong> <span class="muted">{{ row.bikeModel }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</th>
+          <td mat-cell *matCellDef="let row">{{ row.user }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="age">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Antigüedad</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="age" [class.late]="overdue(row)">
+              @if (overdue(row)) { <i class="fa-solid fa-clock"></i> }
+              {{ ageLabel(row) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="st" [attr.data-s]="row.status">{{ row.status }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let row">
+            @if (row.status === 'Abierto') {
+              <button mat-icon-button class="act" title="Tomar reporte" (click)="take(row)">
+                <mat-icon>play_circle</mat-icon>
+              </button>
+            }
+            <button mat-icon-button title="Gestionar" (click)="openManageModal(row)">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="7">
+            No hay reportes que coincidan con "{{ input.value }}"
+          </td>
+        </tr>
+      </table>
+
+      <mat-paginator
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        aria-label="Seleccionar página de reportes">
+      </mat-paginator>
+    </div>
+
+  </div>
+</div>

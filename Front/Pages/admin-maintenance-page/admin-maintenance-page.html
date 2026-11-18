@@ -1,0 +1,90 @@
+<div class="panel">
+
+  <header class="head">
+    <div>
+      <h1>Mantenimiento</h1>
+      <p>Seguimiento de las bicicletas en taller</p>
+    </div>
+
+    <div class="head__right">
+      @if (highCount() > 0) {
+        <span class="pill pill--alert">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          {{ highCount() }} de prioridad alta
+        </span>
+      }
+
+      <button type="button" class="new-btn" (click)="openCreateModal()">
+        <i class="fa-solid fa-plus"></i> Nuevo mantenimiento
+      </button>
+    </div>
+  </header>
+
+  <section class="board">
+    @for (col of columns; track col.status; let c = $index) {
+      <div class="col" [attr.data-tone]="col.tone" [style.--c]="c">
+
+        <div class="col__head">
+          <span class="col__icon"><i class="fa-solid" [class]="col.icon"></i></span>
+          <h2>{{ col.title }}</h2>
+          <span class="col__count">{{ col.items().length }}</span>
+        </div>
+
+        <div class="col__body">
+          @for (o of col.items(); track o.id) {
+            <article class="order" [attr.data-p]="o.priority" [title]="o.description">
+
+              <div class="order__top">
+                <span class="code"><i class="fa-solid fa-barcode"></i> {{ o.code }}</span>
+                <span class="prio" [attr.data-p]="o.priority"><i class="dot"></i> {{ o.priority }}</span>
+              </div>
+
+              <h3>{{ o.model }}</h3>
+
+              <p class="service">
+                {{ o.service }}
+                <em class="kind" [attr.data-k]="o.kind">{{ o.kind }}</em>
+              </p>
+
+              <p class="reason">{{ o.reason }}</p>
+
+              @if (o.status === 'En reparación') {
+                <div class="progress">
+                  <div class="progress__track">
+                    <div class="progress__fill" [style.width.%]="o.progress ?? 0"></div>
+                  </div>
+                  <small>{{ o.progress ?? 0 }}% completado</small>
+                </div>
+              }
+
+              <footer class="order__foot">
+                <span class="date"><i class="fa-regular fa-calendar"></i> {{ fmt(o.date) }}</span>
+
+                @switch (o.status) {
+                  @case ('Pendiente') {
+                    <button type="button" class="act" (click)="start(o)">
+                      <i class="fa-solid fa-play"></i> Iniciar
+                    </button>
+                  }
+                  @case ('En reparación') {
+                    <button type="button" class="act act--ok" (click)="finish(o)">
+                      <i class="fa-solid fa-check"></i> Finalizar
+                    </button>
+                  }
+                  @default {
+                    <span class="done"><i class="fa-solid fa-circle-check"></i> Completado</span>
+                  }
+                }
+              </footer>
+
+            </article>
+          } @empty {
+            <p class="col__empty">{{ col.empty }}</p>
+          }
+        </div>
+
+      </div>
+    }
+  </section>
+
+</div>

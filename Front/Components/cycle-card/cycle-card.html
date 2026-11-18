@@ -1,0 +1,34 @@
+<mat-card class="cycle-card" (click)="select.emit(bike())" >
+
+  @if (bike().badge) {
+    <span class="cycle-card__badge">{{ bike().badge }}</span>
+  }
+
+  @if (bike().image) {
+    <img mat-card-image [src]="bike().image" [alt]="bike().name" class="cycle-card__image" draggable="false" />
+  } @else {
+    <div class="cycle-card__image cycle-card__image--icon">
+      <i class="fa-solid" [class]="bike().icon"></i>
+    </div>
+  }
+
+  <mat-card-content class="cycle-card__content">
+    <span class="cycle-card__type">{{ bike().type }}</span>
+
+    <h2 class="cycle-card__name">{{ bike().name }}</h2>
+
+    <span class="cycle-card__price">
+      {{ bike().pricePerHour | currency:'COP':'symbol-narrow':'1.0-0' }}
+      <small>/ hora</small>
+    </span>
+  </mat-card-content>
+
+  <mat-card-actions class="cycle-card__actions">
+    <button mat-flat-button class="cycle-card__button"
+            (click)="$event.stopPropagation(); rent.emit(bike())">
+      <mat-icon>pedal_bike</mat-icon>
+      Alquilar
+    </button>
+  </mat-card-actions>
+
+</mat-card>

@@ -1,0 +1,57 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+:host {
+  /* Tema claro del admin: lo heredan las páginas hijas (dashboard, etc.) */
+  --bg: #eef0f3;
+  --n-dark: #b8bcc3;
+  --n-light: #ffffff;
+  --text-main: #2b3140;
+  --text-muted: #7b818c;
+  --accent-text: #0b86a8;   // cian oscuro para texto e íconos sobre claro
+
+  display: block;
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  background-color: #0b0d10;
+  color: var(--text-main);
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* =============== FONDO =============== */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: #0b0d10;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+
+  // Velo suave + resplandor cian (también sirve de fondo si la imagen no existe)
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(60% 50% at 50% 100%, rgba(15, 209, 230, 0.22) 0%, transparent 100%),
+      rgba(0, 0, 0, 0.18);
+  }
+}
+
+.shell {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 20px;      // nada pegado a los bordes: se alcanza a ver el fondo
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 800px) {
+  .shell { padding: 12px; gap: 12px; }
+}

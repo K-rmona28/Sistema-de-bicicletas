@@ -1,0 +1,77 @@
+<div class="form">
+
+  <button type="button" class="form__close" aria-label="Cerrar" (click)="close()">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+
+  <header class="form__header">
+    <span class="form__tag">Reporte #{{ report.id }}</span>
+    <h2>{{ report.type }}</h2>
+  </header>
+
+  <!-- Datos del reporte -->
+  <dl class="info">
+    <div>
+      <dt>Bicicleta</dt>
+      <dd>{{ report.bikeCode }} · {{ report.bikeModel }}</dd>
+    </div>
+    <div>
+      <dt>Usuario</dt>
+      <dd>{{ report.user }}</dd>
+    </div>
+    <div>
+      <dt>Enviado</dt>
+      <dd>{{ fmt(report.createdAt) }}</dd>
+    </div>
+    <div>
+      <dt>Estado actual</dt>
+      <dd>{{ report.status }}</dd>
+    </div>
+  </dl>
+
+  <div class="block">
+    <span class="label">Descripción</span>
+    <p class="box">{{ report.description }}</p>
+  </div>
+
+  <div class="block">
+    <span class="label">Evidencia</span>
+    @if (report.evidence.length) {
+      <ul class="files">
+        @for (f of report.evidence; track f) {
+          <li><i class="fa-solid fa-paperclip"></i> {{ f }}</li>
+        }
+      </ul>
+    } @else {
+      <p class="empty">El usuario no adjuntó evidencia.</p>
+    }
+  </div>
+
+  <!-- Gestión -->
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="manage">
+
+    <div class="block">
+      <span class="label">Cambiar estado</span>
+      <div class="seg">
+        @for (s of statuses; track s) {
+          <label [class.on]="form.controls.status.value === s" [attr.data-tone]="s">
+            <input type="radio" formControlName="status" [value]="s" />
+            {{ s }}
+          </label>
+        }
+      </div>
+    </div>
+
+    <label class="block" [class.error]="resolutionInvalid">
+      <span class="label">
+        Respuesta o resolución
+        @if (mustExplain) { <em>obligatoria para resolver</em> }
+      </span>
+      <textarea formControlName="resolution" rows="4" placeholder="Explica qué se hizo o qué se le responde al usuario..."></textarea>
+      @if (resolutionInvalid) { <small>Escribe al menos 10 caracteres para resolver el reporte</small> }
+    </label>
+
+    <button type="submit" class="form__submit">Guardar gestión</button>
+  </form>
+
+</div>
