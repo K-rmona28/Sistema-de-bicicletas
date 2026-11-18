@@ -30,3 +30,33 @@ BEGIN
     );
 END
 GO
+
+USE CycleOnDB;
+GO
+
+CREATE TRIGGER TR_CopiarAuditoria
+ON dbo.RegistroAuditoria
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO AuditoriaCycleOn.dbo.RegistroAuditoria
+    (
+        idUsuario,
+        Accion,
+        EntidadAfectada,
+        idRegistroAfectado,
+        TipoEvento,
+        FechaHora,
+        DescripcionCambio
+    )
+    SELECT
+        idUsuario,
+        Accion,
+        EntidadAfectada,
+        idRegistroAfectado,
+        TipoEvento,
+        FechaHora,
+        DescripcionCambio
+    FROM inserted;
+END;
+GO
