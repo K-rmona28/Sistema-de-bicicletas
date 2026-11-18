@@ -1,0 +1,123 @@
+<div class="form">
+
+    <button type="button" class="form__close" aria-label="Cerrar" (click)="close()">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <header class="form__header">
+        <span class="form__tag">Bicicletas</span>
+        <h2>{{ isEdit ? 'Editar bicicleta' : 'Nueva bicicleta' }}</h2>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="form__grid">
+
+        @if (isEdit) {
+        <div class="field">
+            <span>ID</span>
+            <input type="text" [value]="bike!.id" readonly />
+        </div>
+        }
+
+        <label class="field" [class.error]="invalid('model')">
+            <span>Modelo</span>
+            <input type="text" formControlName="model" placeholder="Ej: Trail X" />
+            @if (invalid('model')) { <small>Ingresa el modelo</small> }
+        </label>
+
+        <label class="field" [class.error]="invalid('code')">
+            <span>Código</span>
+            <input type="text" class="upper" formControlName="code" placeholder="BT-001" />
+            @if (invalid('code')) {
+            <small>{{ form.controls.code.hasError('taken') ? 'Ese código ya existe' : 'Formato: BT-001' }}</small>
+            } @else if (codeHint) {
+            <small class="hint">{{ codeHint }}</small>
+            }
+        </label>
+
+        <label class="field" [class.error]="invalid('brand')">
+            <span>Marca</span>
+            <input type="text" formControlName="brand" placeholder="Ej: Trek" />
+            @if (invalid('brand')) { <small>Ingresa la marca</small> }
+        </label>
+
+        <label class="field" [class.error]="invalid('color')">
+            <span>Color</span>
+            <input type="text" formControlName="color" placeholder="Ej: Negro mate" />
+            @if (invalid('color')) { <small>Ingresa el color</small> }
+        </label>
+
+        <label class="field" [class.error]="invalid('category')">
+            <span>Categoría</span>
+            <select formControlName="category">
+                <option value="" disabled>Elige una categoría</option>
+                @for (c of categories; track c.code) {
+                <option [value]="c.code">{{ c.name }}</option>
+                }
+            </select>
+            @if (invalid('category')) { <small>Elige una categoría</small> }
+        </label>
+
+        <label class="field" [class.error]="invalid('station')">
+            <span>{{ isEdit ? 'Estación actual' : 'Estación inicial' }}</span>
+            <select formControlName="station">
+                <option value="" [disabled]="!isEdit">{{ isEdit ? 'Sin estación asignada' : 'Elige una estación' }}</option>
+                @for (s of stations; track s) {
+                <option [value]="s">{{ s }}</option>
+                }
+            </select>
+            @if (invalid('station')) { <small>Elige una estación</small> }
+        </label>
+
+        @if (isEdit) {
+        <label class="field" [class.error]="invalid('status')">
+            <span>Estado</span>
+            <select formControlName="status">
+                @for (st of statuses; track st) {
+                <option [value]="st">{{ st }}</option>
+                }
+            </select>
+            @if (invalid('status')) { <small>Elige un estado</small> }
+        </label>
+        }
+
+        @if (!isEdit) {
+        <div class="field" [class.error]="invalid('quantity')">
+            <span>Cantidad</span>
+            <div class="stepper">
+                <button type="button" (click)="changeQty(-1)" aria-label="Menos">
+                    <i class="fa-solid fa-minus"></i>
+                </button>
+                <input type="number" formControlName="quantity" min="1" max="50" />
+                <button type="button" (click)="changeQty(1)" aria-label="Más">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+            @if (invalid('quantity')) { <small>Entre 1 y 50</small> }
+        </div>
+
+        <div class="field field--full">
+            <span>Imagen</span>
+
+            <label class="attach">
+                <i class="fa-solid fa-image"></i> Adjuntar imagen
+                <input type="file" accept="image/*" (change)="onImage($event)" hidden />
+            </label>
+
+            @if (image(); as img) {
+            <div class="file">
+                <i class="fa-solid fa-file-image"></i>
+                <span>{{ img.name }}</span>
+                <button type="button" aria-label="Quitar imagen" (click)="image.set(null)">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            }
+        </div>
+        }
+
+        <button type="submit" class="form__submit field--full">
+            {{ isEdit ? 'Guardar cambios' : 'Crear bicicleta' }}
+        </button>
+    </form>
+
+</div>

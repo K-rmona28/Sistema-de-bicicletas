@@ -1,0 +1,66 @@
+<section class="hero">
+
+  <!-- Escena -->
+  <div class="world">
+    <div class="stage">
+      <img class="scene" src="home/fondo.webp" alt="Mirador con vista a la ciudad" draggable="false" />
+      <div class="shadow"></div>
+      <div class="puff"></div>
+      <img class="bike" src="home/bici.webp" alt="Bicicleta de montaña Cycleon" draggable="false" />
+    </div>
+  </div>
+
+  <!-- Atmósfera -->
+  <div class="sun"></div>
+  <div class="dust" aria-hidden="true">
+    @for (p of dust; track $index) {
+      <span [style.--x.%]="p.x" [style.--y.%]="p.y" [style.--s.px]="p.s"
+            [style.--d.s]="p.d" [style.--delay.s]="p.delay"></span>
+    }
+  </div>
+  <div class="shade"></div>
+
+  <!-- Texto -->
+  <div class="hero__content">
+    <span class="reveal tag"><i class="fa-solid fa-bicycle"></i> Bienvenido a Cycleon</span>
+
+    <h1 class="reveal">Tu próxima ruta<br />empieza aquí</h1>
+
+    <p class="reveal">
+      Alquila una bicicleta en minutos y recórrela con la mejor vista de la ciudad.
+    </p>
+
+    <div class="reveal cta">
+      <a class="btn btn--main" routerLink="/alquiler">
+        Alquilar ahora <i class="fa-solid fa-arrow-right"></i>
+      </a>
+      <button type="button" class="btn btn--glass" (click)="goToSedes()">
+        Nuestras sedes
+      </button>
+    </div>
+  </div>
+
+  <!-- Chip en vivo -->
+  <div class="live">
+    <span class="live__dot"></span>
+    <div>
+      <strong>248 bicis</strong>
+      <small>disponibles ahora</small>
+    </div>
+  </div>
+
+  <button type="button" class="hint" (click)="goToSedes()" aria-label="Ir a las sedes">
+    <span>Descubre más</span>
+    <i class="fa-solid fa-chevron-down"></i>
+  </button>
+
+</section>
+
+<!-- Segunda pantalla: sedes -->
+<section id="sedes" class="sedes">
+  <div class="sedes-wrap">
+    <app-sedes-section [sedes]="sedes" />
+  </div>
+</section>
+
+<app-radial-menu />

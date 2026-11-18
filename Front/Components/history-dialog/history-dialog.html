@@ -1,0 +1,57 @@
+<div class="history">
+
+  <button type="button" class="history__close" aria-label="Cerrar" (click)="close()">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+
+  <header class="history__header">
+    <span class="history__tag">Actividad</span>
+    <h2>Mi historial</h2>
+  </header>
+
+  <!-- Resumen -->
+  <div class="stats">
+    @for (s of stats; track s.label) {
+      <div class="stat">
+        <i class="fa-solid" [class]="s.icon"></i>
+        <strong>{{ s.value }}</strong>
+        <span>{{ s.label }}</span>
+      </div>
+    }
+  </div>
+
+  <!-- Sanciones -->
+  <h3 class="section">Sanciones</h3>
+  @if (sanctions.length) {
+    @for (s of sanctions; track s.date) {
+      <div class="sanction">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <div>
+          <strong>{{ s.reason }}</strong>
+          <span>{{ s.date }}</span>
+        </div>
+        <em>{{ s.status }}</em>
+      </div>
+    }
+  } @else {
+    <p class="clean"><i class="fa-solid fa-circle-check"></i> Sin sanciones. ¡Sigue así!</p>
+  }
+
+  <!-- Últimos préstamos -->
+  <h3 class="section">Últimos préstamos</h3>
+  <ul class="loans">
+    @for (l of loans; track l.date) {
+      <li>
+        <div class="loans__bike">
+          <strong>{{ l.bike }}</strong>
+          <span>{{ l.sede }}</span>
+        </div>
+        <div class="loans__meta">
+          <span>{{ l.date }}</span>
+          <span>{{ l.duration }}</span>
+        </div>
+      </li>
+    }
+  </ul>
+
+</div>

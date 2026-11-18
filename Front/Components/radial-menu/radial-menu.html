@@ -1,0 +1,31 @@
+<div class="menu" [class.active]="open()">
+
+  <!-- Botón principal -->
+  <button
+    type="button"
+    class="btn trigger"
+    aria-label="Redes sociales"
+    [attr.aria-expanded]="open()"
+    (click)="toggle()"
+  >
+    <span class="line"></span>
+  </button>
+
+  <!-- Redes -->
+  <div class="icons">
+    @for (link of links; track link.label) {
+      <div class="rotater" [style.--angle]="link.angle + 'deg'">
+        <a
+          class="btn btn-icon"
+          [href]="link.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          [attr.aria-label]="link.label"
+        >
+          <i class="fa-brands" [class]="link.icon"></i>
+        </a>
+      </div>
+    }
+  </div>
+
+</div>

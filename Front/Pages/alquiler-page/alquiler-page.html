@@ -1,0 +1,43 @@
+<div class="products-page">
+
+  <!-- Categorías -->
+  <aside class="categories">
+    <h2 class="categories__title">Categorías</h2>
+
+    <mat-nav-list>
+      <a mat-list-item class="category-item"
+         [activated]="categorySelected() === 'ALL'"
+         (click)="categorySelected.set('ALL')">
+        <mat-icon matListItemIcon>apps</mat-icon>
+        <span matListItemTitle>Todas</span>
+      </a>
+
+      @for (category of categories; track category.code) {
+        <a mat-list-item class="category-item"
+           [activated]="categorySelected() === category.code"
+           (click)="categorySelected.set(category.code)">
+          <mat-icon matListItemIcon>{{ category.icon }}</mat-icon>
+          <span matListItemTitle>{{ category.name }}</span>
+        </a>
+      }
+    </mat-nav-list>
+  </aside>
+
+  <!-- Bicicletas -->
+  <main class="products">
+    <div class="products__header">
+      <h1>Bicicletas</h1>
+    </div>
+
+    @if (filteredBikes().length === 0) {
+      <p>No se encontraron bicicletas</p>
+    } @else {
+      <div class="products__grid">
+        @for (bike of filteredBikes(); track bike.id) {
+          <app-cycle-card [bike]="bike" (rent)="onRent($event)" (select)="onSelect($event)"/>
+        }
+      </div>
+    }
+  </main>
+
+</div>

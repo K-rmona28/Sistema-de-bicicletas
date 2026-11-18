@@ -1,0 +1,61 @@
+<div class="form">
+
+  <button type="button" class="form__close" aria-label="Cerrar" (click)="close()">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+
+  <header class="form__header">
+    <span class="form__tag">Estaciones</span>
+    <h2>Redistribuir bicicletas</h2>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="form__grid">
+
+    <label class="field field--full" [class.error]="invalid('stationId')">
+      <span>Estación destino</span>
+      <select formControlName="stationId">
+        <option [ngValue]="0" disabled>Elige la estación destino</option>
+        @for (s of stations; track s.id) {
+          <option [ngValue]="s.id">{{ s.name }}</option>
+        }
+      </select>
+      @if (invalid('stationId')) {
+        <small>Elige una estación</small>
+      } @else if (free() !== null) {
+        <small class="hint">Espacio libre: {{ free() }} bicicletas</small>
+      }
+    </label>
+
+    <label class="field" [class.error]="invalid('model')">
+      <span>Modelo</span>
+      <select formControlName="model">
+        <option value="" disabled>Elige el modelo</option>
+        @for (m of models; track m) {
+          <option [value]="m">{{ m }}</option>
+        }
+      </select>
+      @if (invalid('model')) { <small>Elige un modelo</small> }
+    </label>
+
+    <div class="field" [class.error]="invalid('quantity') || overflow()">
+      <span>Cantidad</span>
+      <div class="stepper">
+        <button type="button" (click)="changeQty(-1)" aria-label="Menos">
+          <i class="fa-solid fa-minus"></i>
+        </button>
+        <input type="number" formControlName="quantity" [min]="MIN" />
+        <button type="button" (click)="changeQty(1)" aria-label="Más">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+      @if (overflow()) {
+        <small>Supera el espacio libre de la estación</small>
+      } @else if (invalid('quantity')) {
+        <small>Mínimo {{ MIN }} bicicletas</small>
+      }
+    </div>
+
+    <button type="submit" class="form__submit field--full">Redistribuir</button>
+  </form>
+
+</div>

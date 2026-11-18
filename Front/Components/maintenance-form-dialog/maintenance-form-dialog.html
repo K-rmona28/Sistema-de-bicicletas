@@ -1,0 +1,86 @@
+<div class="form">
+
+  <button type="button" class="form__close" aria-label="Cerrar" (click)="close()">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+
+  <header class="form__header">
+    <span class="form__tag">Mantenimiento</span>
+    <h2>Nuevo mantenimiento</h2>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="form__grid">
+
+    <label class="field" [class.error]="invalid('code')">
+      <span>Código de la bicicleta</span>
+      <input type="text" class="upper" formControlName="code" placeholder="BT-001" list="bike-codes" autocomplete="off" />
+      <datalist id="bike-codes">
+        @for (b of bikes; track b.code) {
+          <option [value]="b.code">{{ b.model }}</option>
+        }
+      </datalist>
+
+      @if (invalid('code')) {
+        <small>{{ form.controls.code.hasError('required') ? 'Ingresa el código' : 'Ese código no está registrado' }}</small>
+      } @else if (match) {
+        <small class="hint"><i class="fa-solid fa-bicycle"></i> {{ match.model }}</small>
+      }
+    </label>
+
+    <label class="field" [class.error]="invalid('date')">
+      <span>Fecha programada</span>
+      <input type="date" formControlName="date" [min]="today" />
+      @if (invalid('date')) { <small>Elige una fecha</small> }
+    </label>
+
+    <label class="field" [class.error]="invalid('service')">
+      <span>Tipo de servicio</span>
+      <select formControlName="service">
+        <option value="" disabled>Elige un servicio</option>
+        @for (s of services; track s) {
+          <option [value]="s">{{ s }}</option>
+        }
+      </select>
+      @if (invalid('service')) { <small>Elige un servicio</small> }
+    </label>
+
+    <div class="field">
+      <span>Tipo de mantenimiento</span>
+      <div class="seg">
+        @for (k of kinds; track k) {
+          <label [class.on]="form.controls.kind.value === k">
+            <input type="radio" formControlName="kind" [value]="k" />
+            {{ k }}
+          </label>
+        }
+      </div>
+    </div>
+
+    <div class="field field--full">
+      <span>Prioridad</span>
+      <div class="seg">
+        @for (p of priorities; track p) {
+          <label [class.on]="form.controls.priority.value === p" [attr.data-tone]="p">
+            <input type="radio" formControlName="priority" [value]="p" />
+            <i class="dot"></i> {{ p }}
+          </label>
+        }
+      </div>
+    </div>
+
+    <label class="field field--full" [class.error]="invalid('reason')">
+      <span>Motivo del mantenimiento</span>
+      <input type="text" formControlName="reason" placeholder="Ej: Frenos desgastados" />
+      @if (invalid('reason')) { <small>Ingresa el motivo</small> }
+    </label>
+
+    <label class="field field--full" [class.error]="invalid('description')">
+      <span>Descripción</span>
+      <textarea formControlName="description" rows="4" placeholder="Detalla el trabajo a realizar..."></textarea>
+      @if (invalid('description')) { <small>Describe el trabajo (mínimo 10 caracteres)</small> }
+    </label>
+
+    <button type="submit" class="form__submit field--full">Programar mantenimiento</button>
+  </form>
+
+</div>

@@ -1,0 +1,32 @@
+<div class="detail">
+
+  <button mat-icon-button mat-dialog-close class="detail__back" aria-label="Volver a alquiler">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  <div class="detail__photo">
+    @if (bike.image) {
+      <img [src]="bike.image" [alt]="bike.name" draggable="false" />
+    } @else {
+      <i class="fa-solid" [class]="bike.icon"></i>
+    }
+  </div>
+
+  <h2 class="detail__name">{{ bike.name }}</h2>
+
+  <dl class="detail__data">
+    <div class="detail__row">
+      <dt>Modelo</dt>
+      <dd>{{ bike.model }}</dd>
+    </div>
+    <div class="detail__row">
+      <dt>Categoría</dt>
+      <dd>{{ categoryName }}</dd>
+    </div>
+    <div class="detail__row">
+      <dt>Color</dt>
+      <dd>{{ bike.color }}</dd>
+    </div>
+  </dl>
+
+</div>

@@ -1,0 +1,332 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+:host {
+  display: block;
+  /* --bg, --n-dark, --n-light, --text-*, --accent-text vienen del shell */
+  --up: #1fa971;
+  --down: #e5484d;
+  --warn: #e08a00;
+}
+
+/* Mismo cuadro negro cristalizado del dashboard */
+.panel {
+  min-height: calc(100vh - 40px);
+  padding: 28px;
+  border-radius: 32px;
+  color: #fff;
+  background: rgba(10, 13, 17, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+/* =============== Encabezado =============== */
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 26px;
+
+  h1 { margin: 0; font-size: 30px; font-weight: 800; line-height: 1.2; color: #fff; }
+  p  { margin: 4px 0 0; font-size: 13px; color: rgba(255, 255, 255, 0.65); }
+
+  &__right { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 20px;
+  color: var(--text-main);
+  background: var(--bg);
+  box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.4), -3px -3px 8px rgba(255, 255, 255, 0.06);
+
+  &--alert i { color: var(--down); }
+}
+
+.new-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #0b1f24;
+  background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+  box-shadow: 0 10px 28px rgba(15, 209, 230, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover  { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(15, 209, 230, 0.45); }
+  &:active { transform: scale(0.96); }
+}
+
+/* =============== Tablero =============== */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+.col {
+  --tone: var(--accent-start);
+  padding: 16px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: rise 0.6s ease both;
+  animation-delay: calc(var(--c, 0) * 90ms);
+
+  &[data-tone='warn']   { --tone: #ffb545; }
+  &[data-tone='accent'] { --tone: var(--accent-start); }
+  &[data-tone='up']     { --tone: #3ddc97; }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+
+    h2 { flex: 1; margin: 0; font-size: 15px; font-weight: 800; line-height: 1.3; color: #fff; }
+  }
+
+  &__icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    color: var(--tone);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--tone) 35%, transparent);
+
+    i { font-size: 14px; }
+  }
+
+  &__count {
+    min-width: 28px;
+    padding: 4px 10px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--tone);
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  &__body { display: flex; flex-direction: column; gap: 14px; }
+
+  &__empty {
+    margin: 0;
+    padding: 28px 12px;
+    text-align: center;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+    border: 1px dashed rgba(255, 255, 255, 0.18);
+    border-radius: 16px;
+  }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* =============== Tarjeta (blanca, neomórfica) =============== */
+.order {
+  --tone: var(--accent-start);
+  position: relative;
+  padding: 16px 18px 14px 22px;
+  overflow: hidden;
+  border-radius: 20px;
+  color: var(--text-main);
+  background: var(--bg);
+  box-shadow: 6px 6px 16px rgba(0, 0, 0, 0.4), -3px -3px 10px rgba(255, 255, 255, 0.05);
+  animation: rise 0.4s ease both;
+
+  &[data-p='Alta']  { --tone: var(--down); }
+  &[data-p='Media'] { --tone: var(--warn); }
+  &[data-p='Baja']  { --tone: var(--accent-text); }
+
+  // Franja de prioridad
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 14px;
+    bottom: 14px;
+    width: 5px;
+    border-radius: 0 5px 5px 0;
+    background: var(--tone);
+  }
+
+  &__top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+
+  h3 { margin: 12px 0 2px; font-size: 18px; font-weight: 800; line-height: 1.3; }
+
+  &__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0, 0, 0, 0.07);
+  }
+}
+
+.code {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  border-radius: 12px;
+  box-shadow: inset 3px 3px 6px var(--n-dark), inset -3px -3px 6px var(--n-light);
+
+  i { color: var(--accent-text); }
+}
+
+.prio {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--down);
+
+  &[data-p='Media'] { color: var(--warn); }
+  &[data-p='Baja']  { color: var(--accent-text); }
+
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
+}
+
+.service {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.kind {
+  font-style: normal;
+  padding: 2px 10px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  border-radius: 10px;
+  color: var(--accent-text);
+  background: rgba(15, 209, 230, 0.14);
+
+  &[data-k='Correctivo'] { color: var(--warn); background: rgba(224, 138, 0, 0.14); }
+}
+
+.reason { margin: 8px 0 0; font-size: 13px; line-height: 1.5; }
+
+/* =============== Progreso =============== */
+.progress {
+  margin-top: 12px;
+
+  &__track {
+    height: 12px;
+    padding: 3px;
+    border-radius: 8px;
+    box-shadow: inset 3px 3px 6px var(--n-dark), inset -3px -3px 6px var(--n-light);
+  }
+
+  &__fill {
+    height: 100%;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--accent-end), var(--accent-start));
+    box-shadow: 0 0 8px rgba(15, 209, 230, 0.35);
+    transform-origin: left;
+    animation: growX 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  small { display: block; margin-top: 6px; font-size: 11px; color: var(--text-muted); }
+}
+
+@keyframes growX { from { transform: scaleX(0); } }
+
+/* =============== Pie de la tarjeta =============== */
+.date {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+
+  i { color: var(--accent-text); }
+}
+
+.act {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  background: var(--bg);
+  box-shadow: 4px 4px 8px var(--n-dark), -4px -4px 8px var(--n-light);
+  transition: box-shadow 0.15s, color 0.2s;
+
+  &:hover  { color: var(--text-main); }
+  &:active { box-shadow: inset 3px 3px 6px var(--n-dark), inset -3px -3px 6px var(--n-light); }
+
+  &--ok { color: var(--up); }
+}
+
+.done {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--up);
+}
+
+/* =============== Responsive =============== */
+@media (max-width: 1300px) {
+  .board { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 800px) {
+  .panel { padding: 18px; border-radius: 24px; }
+  .head h1 { font-size: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .col, .order, .progress__fill { animation: none; }
+}

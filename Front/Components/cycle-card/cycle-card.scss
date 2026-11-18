@@ -1,0 +1,136 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+:host {
+  display: block;
+  height: 100%;
+}
+
+.cycle-card {
+  position: relative;
+  width: 250px;
+  height: 100%;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(15, 209, 230, 0.25);
+}
+
+  &__badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #fff;
+    background: var(--accent-end);
+    border-radius: 12px;
+  }
+
+  &__image {
+    width: 100%;
+    height: 220px;
+    object-fit: contain;
+    padding: 16px;
+    box-sizing: border-box;
+
+    &--icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      i {
+        font-size: 72px;
+        line-height: 1.2;
+      }
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    padding: 16px;
+  }
+
+  &__type {
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  &__name {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  &__price {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--accent-start);   // mismo cian del home
+
+  small {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+}
+
+  &__actions {
+    padding: 0 16px 16px;
+  }
+
+  &__button {
+  width: 100%;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #0b1f24;
+  background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+  border-radius: 20px;
+  transition: transform 80ms ease-in;
+
+  // Anula el color plano de Material para que se vea el degradado
+  --mat-button-filled-container-color: transparent;
+  --mat-button-filled-label-text-color: #0b1f24;
+  --mat-button-filled-container-shape: 20px;
+
+  &:active { transform: scale(0.96); }
+}
+
+@media (max-width: 900px) {
+  .cycle-card__image { height: 190px; }
+}
+
+@media (max-width: 600px) {
+  .cycle-card { width: 100%; }
+  .cycle-card__image { height: 160px; padding: 10px; }
+  .cycle-card__content { padding: 12px; }
+  .cycle-card__name { font-size: 15px; }
+  .cycle-card__price { font-size: 17px; }
+  .cycle-card__actions { padding: 0 12px 12px; }
+
+  .cycle-card__button {
+    font-size: 0;   // solo el ícono en móvil, como el original
+    min-width: 0;
+    mat-icon { margin: 0; }
+  }
+}
+
+@media (max-width: 600px) {
+  .cycle-card__image { height: 200px; }
+  .cycle-card__button { font-size: inherit; }
+}
+}

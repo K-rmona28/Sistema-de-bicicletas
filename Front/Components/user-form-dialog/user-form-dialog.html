@@ -1,0 +1,115 @@
+<div class="form">
+
+  <button type="button" class="form__close" aria-label="Cerrar" (click)="close()">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+
+  <header class="form__header">
+    <span class="form__tag">
+      {{ isProfileMode ? 'Mi cuenta' : 'Usuarios' }}{{ isEdit && !isProfileMode ? ' · ID ' + user!.id : '' }}
+    </span>
+    <h2>
+      {{ isProfileMode ? 'Editar mi perfil' : isEdit ? 'Editar usuario' : 'Nuevo usuario' }}
+    </h2>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="form__grid">
+
+    <label class="field" [class.error]="msg('firstName')">
+      <span>Nombre</span>
+      <input type="text" formControlName="firstName" placeholder="Ej: Juan Pablo" autocomplete="off" />
+      @if (msg('firstName'); as m) { <small>{{ m }}</small> }
+    </label>
+
+    <label class="field" [class.error]="msg('lastName')">
+      <span>Apellido</span>
+      <input type="text" formControlName="lastName" placeholder="Ej: Arango" autocomplete="off" />
+      @if (msg('lastName'); as m) { <small>{{ m }}</small> }
+    </label>
+
+    @if (!isEdit) {
+      <label class="field" [class.error]="msg('document')">
+        <span>Documento</span>
+        <input type="text" inputmode="numeric" formControlName="document" placeholder="1234567890" autocomplete="off" />
+        @if (msg('document'); as m) { <small>{{ m }}</small> }
+      </label>
+    }
+
+    <label class="field" [class.field--full]="isEdit" [class.error]="msg('phone')">
+      <span>Teléfono</span>
+      <input type="tel" inputmode="numeric" formControlName="phone" placeholder="3001234567" autocomplete="off" />
+      @if (msg('phone'); as m) { <small>{{ m }}</small> }
+    </label>
+
+    <label class="field field--full" [class.error]="msg('email')">
+      <span>Email {{ isProfileMode ? '(no editable)' : '' }}</span>
+      <input type="email" formControlName="email" placeholder="correo@ejemplo.com" autocomplete="off" />
+      @if (msg('email'); as m) { <small>{{ m }}</small> }
+    </label>
+
+    <label class="field" [class.error]="msg('birthDate')">
+      <span>Fecha de nacimiento</span>
+      <input type="date" formControlName="birthDate" [max]="today" />
+      @if (msg('birthDate'); as m) { <small>{{ m }}</small> }
+    </label>
+
+    <div class="field">
+      <span>Edad</span>
+      <input type="text" [value]="age() !== null ? age() + ' años' : ''" placeholder="Se calcula sola" readonly />
+    </div>
+
+    @if (!isProfileMode) {
+      <label class="field">
+        <span>Rol</span>
+        <select formControlName="role">
+          @for (r of roles; track r) {
+            <option [value]="r">{{ r }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Estado</span>
+        <select formControlName="status">
+          @for (s of statuses; track s) {
+            <option [value]="s">{{ s }}</option>
+          }
+        </select>
+      </label>
+
+      @if (!isEdit) {
+        <label class="field" [class.error]="msg('username')">
+          <span>Nombre de usuario</span>
+          <input type="text" formControlName="username" placeholder="juanpablo" autocomplete="off" />
+          @if (msg('username'); as m) { <small>{{ m }}</small> }
+        </label>
+      }
+
+      <div class="field" [class.field--full]="isEdit" [class.error]="msg('password')">
+        <span>{{ isEdit ? 'Nueva contraseña (opcional)' : 'Contraseña' }}</span>
+        <div class="pwd">
+          <input [type]="showPassword() ? 'text' : 'password'" formControlName="password"
+                 [placeholder]="isEdit ? 'Dejar vacía para no cambiar' : 'Mínimo 6 caracteres'"
+                 autocomplete="new-password" />
+          <button type="button" [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                  (click)="showPassword.set(!showPassword())">
+            <i class="fa-solid" [class]="showPassword() ? 'fa-eye-slash' : 'fa-eye'"></i>
+          </button>
+        </div>
+        @if (msg('password'); as m) { <small>{{ m }}</small> }
+      </div>
+    }
+
+    @if (errorMsg(); as err) {
+      <div class="form__error field--full" role="alert">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span>{{ err }}</span>
+      </div>
+    }
+
+    <button type="submit" class="form__submit field--full" [disabled]="submitting()">
+      {{ submitting() ? 'Guardando...' : isEdit ? 'Guardar cambios' : 'Crear usuario' }}
+    </button>
+  </form>
+
+</div>

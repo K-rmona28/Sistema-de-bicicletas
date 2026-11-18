@@ -1,0 +1,105 @@
+<div class="rent">
+
+  <button type="button" class="rent__close" aria-label="Cerrar" (click)="close()">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+
+  <header class="rent__header">
+    <span class="rent__tag">Reserva</span>
+    <h2>Alquilar {{ bike.name }}</h2>
+    <p>{{ bike.pricePerHour | currency:'COP':'symbol-narrow':'1.0-0' }} <small>/ hora</small></p>
+  </header>
+
+  <form class="rent__form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+    <!-- Nombre (ocupa las 2 columnas) -->
+    <label class="field field--full" [class.error]="invalid('fullName')">
+      <span>Nombre completo</span>
+      <input type="text" formControlName="fullName" placeholder="Ej: Juan Pablo Gómez" autocomplete="name" />
+      @if (invalid('fullName')) { <small>Ingresa tu nombre</small> }
+    </label>
+
+    <label class="field" [class.error]="invalid('document')">
+      <span>Cédula</span>
+      <input type="text" inputmode="numeric" formControlName="document" placeholder="1234567890" />
+      @if (invalid('document')) { <small>Entre 6 y 10 dígitos</small> }
+    </label>
+
+    <label class="field" [class.error]="invalid('phone')">
+      <span>Celular</span>
+      <input type="tel" inputmode="numeric" formControlName="phone" placeholder="3001234567" autocomplete="tel" />
+      @if (invalid('phone')) { <small>10 dígitos, empieza por 3</small> }
+    </label>
+
+    <label class="field" [class.error]="invalid('pickupPoint')">
+      <span>¿Dónde quieres recogerla?</span>
+      <select formControlName="pickupPoint">
+        <option value="" disabled>
+          {{ sedes.length ? 'Elige una sede' : 'Sin estaciones disponibles' }}
+        </option>
+        @for (s of sedes; track s.id) {
+          <option [value]="s.name">{{ s.name }}</option>
+        }
+      </select>
+      @if (invalid('pickupPoint')) {
+        <small>Elige una sede</small>
+      } @else if (bike.stationName) {
+        <small class="hint">Disponible únicamente en {{ bike.stationName }}</small>
+      }
+    </label>
+
+    <div class="field" [class.error]="invalid('hours')">
+      <span>¿Cuántas horas?</span>
+      <div class="stepper">
+        <button type="button" (click)="changeHours(-1)" aria-label="Menos horas">
+          <i class="fa-solid fa-minus"></i>
+        </button>
+        <input type="number" formControlName="hours" min="1" max="12" />
+        <button type="button" (click)="changeHours(1)" aria-label="Más horas">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+      @if (invalid('hours')) { <small>Entre 1 y 12 horas</small> }
+    </div>
+
+    <label class="field" [class.error]="invalid('date')">
+      <span>Fecha</span>
+      <input type="date" formControlName="date" [min]="today" />
+      @if (invalid('date')) { <small>Elige una fecha</small> }
+    </label>
+
+    <label class="field" [class.error]="invalid('time')">
+      <span>Hora</span>
+      <input type="time" formControlName="time" />
+      @if (invalid('time')) { <small>Elige una hora</small> }
+    </label>
+
+    <label class="field" [class.error]="invalid('paymentType')">
+      <span>Tipo de pago</span>
+      <select formControlName="paymentType">
+        <option value="" disabled>Elige un método</option>
+        @for (p of paymentTypes; track p) {
+          <option [value]="p">{{ p }}</option>
+        }
+      </select>
+      @if (invalid('paymentType')) { <small>Elige un método</small> }
+    </label>
+
+    <div class="total">
+      <span>Total estimado</span>
+      <strong>{{ total() | currency:'COP':'symbol-narrow':'1.0-0' }}</strong>
+    </div>
+
+    @if (errorMsg(); as msg) {
+      <div class="alert-error field--full" role="alert">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span>{{ msg }}</span>
+      </div>
+    }
+
+    <button type="submit" class="rent__submit field--full" [disabled]="submitting() || sedes.length === 0">
+      {{ submitting() ? 'Confirmando...' : 'Confirmar reserva' }}
+    </button>
+  </form>
+
+</div>

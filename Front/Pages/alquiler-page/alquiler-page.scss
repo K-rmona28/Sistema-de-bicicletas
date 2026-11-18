@@ -1,0 +1,125 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+:host {
+  display: block;
+  min-height: 100vh;
+  padding-top: 72px;          // la barra del layout flota arriba
+  background: var(--bg);
+
+  --mat-list-active-indicator-color: rgba(15, 209, 230, 0.12);
+  --mat-sys-on-secondary-container: var(--text-main);
+  --mat-list-list-item-leading-icon-color: var(--text-muted);
+}
+
+.products-page {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 24px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* ===== CATEGORÍAS ===== */
+.categories {
+  width: 100%;
+
+  &__title {
+    margin: 0 0 12px;
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+
+.category-item {
+  border-radius: 14px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.25s, border-color 0.25s;
+
+  &.mdc-list-item--activated {
+    border-color: rgba(15, 209, 230, 0.4);
+
+    --mat-list-list-item-leading-icon-color: var(--accent-start);
+  }
+}
+
+/* ===== BICICLETAS ===== */
+.products {
+  min-width: 0;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  &__header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 250px);
+    justify-content: start;
+    gap: 20px;
+  }
+}
+
+/* ===== TABLET ===== */
+@media (max-width: 900px) {
+  .products-page {
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .products__grid {
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 16px;
+  }
+}
+
+/* ===== MÓVIL ===== */
+@media (max-width: 600px) {
+  .products-page {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 16px;
+  }
+
+  .categories {
+    &__title { margin-bottom: 8px; }
+
+    mat-nav-list {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px 0;
+    }
+
+    .category-item {
+      flex: 0 0 auto;
+      width: auto;
+      margin: 0;
+      white-space: nowrap;
+    }
+  }
+
+  .products__header { margin-bottom: 16px; }
+
+  .products__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .products-page { padding: 12px; }
+  .products__grid { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,166 @@
+<div class="profile">
+
+  <!-- ===== IZQUIERDA: usuario ===== -->
+  <aside class="card user">
+    <div class="avatar">
+      <i class="fa-solid fa-user"></i>
+    </div>
+
+    <h1 class="user__name">{{ user.fullName }}</h1>
+    <span class="user__role">{{ user.role }}</span>
+
+    <div class="user__actions">
+      <button type="button" class="btn btn--accent" (click)="editProfile()">
+        <i class="fa-solid fa-pen"></i> Editar perfil
+      </button>
+
+      <button type="button" class="btn" (click)="viewHistory()">
+        <i class="fa-solid fa-clock-rotate-left"></i> Ver historial
+      </button>
+    </div>
+
+    <div class="info">
+      <h2>Información personal</h2>
+
+      <div class="info__row">
+        <i class="fa-solid fa-envelope"></i>
+        <div>
+          <span>Email</span>
+          <strong>{{ user.email }}</strong>
+        </div>
+      </div>
+
+      <div class="info__row">
+        <i class="fa-solid fa-phone"></i>
+        <div>
+          <span>Teléfono</span>
+          <strong>{{ user.phone }}</strong>
+        </div>
+      </div>
+
+      <div class="info__row">
+        <i class="fa-solid fa-id-card"></i>
+        <div>
+          <span>ID</span>
+          <strong>{{ user.id }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn--plain" (click)="logout()">
+      <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
+    </button>
+  </aside>
+
+  <!-- ===== DERECHA: préstamo activo o reserva vigente ===== -->
+  <main class="card rental">
+    <h2 class="rental__title">
+      {{ rental() ? 'Préstamo activo' : reservation() ? 'Reserva vigente' : 'Préstamo activo' }}
+    </h2>
+
+    @if (actionError(); as err) {
+      <div class="rental__alert" role="alert">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span>{{ err }}</span>
+      </div>
+    }
+
+    @if (rental(); as r) {
+      <div class="rental__photo">
+        @if (r.bike.image) {
+          <img [src]="r.bike.image" [alt]="r.bike.name" draggable="false" />
+        } @else {
+          <i class="fa-solid" [class]="r.bike.icon"></i>
+        }
+      </div>
+
+      <h3 class="rental__name">{{ r.bike.name }}</h3>
+
+      <div class="rental__grid">
+        <div class="stat">
+          <span>Categoría</span>
+          <strong>{{ r.category }}</strong>
+        </div>
+
+        <div class="stat">
+          <span>Sede origen</span>
+          <strong>{{ r.sede }}</strong>
+        </div>
+
+        <div class="stat stat--time">
+          <span>Tiempo de uso</span>
+          <strong class="time">{{ r.timeLeft }}</strong>
+        </div>
+      </div>
+
+      <div class="rental__return">
+        <label for="estacionDestino">Estación de entrega:</label>
+        <select
+          id="estacionDestino"
+          [ngModel]="estacionDestinoId()"
+          (ngModelChange)="estacionDestinoId.set(+$event)">
+          @for (est of estacionesLista(); track est.idEstacion) {
+            <option [ngValue]="est.idEstacion">{{ est.nombre }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="rental__buttons">
+        <button type="button" class="btn btn--accent" [disabled]="processing()" (click)="finalizarViaje()">
+          <i class="fa-solid fa-flag-checkered"></i>
+          {{ processing() ? 'Finalizando...' : 'Finalizar viaje' }}
+        </button>
+
+        <button type="button" class="btn btn--danger" (click)="reportProblem()">
+          <i class="fa-solid fa-triangle-exclamation"></i> Reportar problema
+        </button>
+      </div>
+
+    } @else if (reservation(); as res) {
+      <div class="rental__photo">
+        @if (res.bike.image) {
+          <img [src]="res.bike.image" [alt]="res.bike.name" draggable="false" />
+        } @else {
+          <i class="fa-solid" [class]="res.bike.icon"></i>
+        }
+      </div>
+
+      <h3 class="rental__name">{{ res.bike.name }}</h3>
+
+      <div class="rental__grid">
+        <div class="stat">
+          <span>Categoría</span>
+          <strong>{{ res.category }}</strong>
+        </div>
+
+        <div class="stat">
+          <span>Sede recogida</span>
+          <strong>{{ res.sede }}</strong>
+        </div>
+
+        <div class="stat stat--time">
+          <span>Reservada</span>
+          <strong class="time">{{ res.fechaHora | date:'shortTime' }}</strong>
+        </div>
+      </div>
+
+      <div class="rental__buttons">
+        <button type="button" class="btn btn--accent" [disabled]="processing()" (click)="iniciarViajeDesdeReserva()">
+          <i class="fa-solid fa-person-biking"></i>
+          {{ processing() ? 'Iniciando...' : 'Retirar bicicleta (Iniciar viaje)' }}
+        </button>
+
+        <button type="button" class="btn btn--danger" [disabled]="processing()" (click)="cancelarReservaActiva()">
+          <i class="fa-solid fa-xmark"></i> Cancelar reserva
+        </button>
+      </div>
+
+    } @else {
+      <div class="empty">
+        <i class="fa-solid fa-bicycle"></i>
+        <p>No tienes ningún préstamo o reserva activa</p>
+      </div>
+    }
+  </main>
+
+</div>
