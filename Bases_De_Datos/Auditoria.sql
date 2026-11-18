@@ -30,3 +30,52 @@ BEGIN
     );
 END
 GO
+
+CREATE DATABASE AuditoriaCycleOn;
+GO
+
+USE AuditoriaCycleOn;
+GO
+
+CREATE TABLE dbo.RegistroAuditoria
+(
+    idAuditoria INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    idUsuario INT NOT NULL,
+    Accion NVARCHAR(50) NOT NULL,
+    EntidadAfectada NVARCHAR(60) NOT NULL,
+    idRegistroAfectado INT NULL,
+    TipoEvento NVARCHAR(50) NOT NULL,
+    FechaHora DATETIME2(0) NOT NULL,
+    DescripcionCambio NVARCHAR(MAX) NULL
+);
+GO
+
+USE CycleOnDB;
+GO
+
+CREATE TRIGGER TR_CopiarAuditoria
+ON dbo.RegistroAuditoria
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO AuditoriaCycleOn.dbo.RegistroAuditoria
+    (
+        idUsuario,
+        Accion,
+        EntidadAfectada,
+        idRegistroAfectado,
+        TipoEvento,
+        FechaHora,
+        DescripcionCambio
+    )
+    SELECT
+        idUsuario,
+        Accion,
+        EntidadAfectada,
+        idRegistroAfectado,
+        TipoEvento,
+        FechaHora,
+        DescripcionCambio
+    FROM inserted;
+END;
+GO
