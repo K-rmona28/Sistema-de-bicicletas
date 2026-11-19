@@ -2,30 +2,26 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_CONFIG } from '../constants/api';
-import {
-    ActualizarEstadoReporteRequest,
-    FiltroReportesRequest,
-    GetMensajeResponse,
-    GetReporteResponse,
-    RegistrarReporteRequest
-} from '../interfaces';
-import { buildHttpParams } from '../utils/api';
+import { CrearReservaRequest, GetMensajeResponse, GetReservaResponse } from '../interfaces';
 
 @Injectable({ providedIn: 'root' })
-export class ReportesService {
+export class ReservasService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = `${API_CONFIG.API_URL}/Reportes`;
+  private readonly baseUrl = `${API_CONFIG.API_URL}/Reservas`;
 
-  getReportes(filtros: FiltroReportesRequest = {}): Observable<GetReporteResponse[]> {
-    const params = buildHttpParams(filtros as Record<string, unknown>);
-    return this.http.get<GetReporteResponse[]>(this.baseUrl, { params });
+  getReservas(): Observable<GetReservaResponse[]> {
+    return this.http.get<GetReservaResponse[]>(this.baseUrl);
   }
 
-  registrarReporte(payload: RegistrarReporteRequest): Observable<GetReporteResponse> {
-    return this.http.post<GetReporteResponse>(this.baseUrl, payload);
+  crearReserva(payload: CrearReservaRequest): Observable<GetReservaResponse> {
+    return this.http.post<GetReservaResponse>(this.baseUrl, payload);
   }
 
-  actualizarEstado(id: number, payload: ActualizarEstadoReporteRequest): Observable<GetMensajeResponse> {
-    return this.http.put<GetMensajeResponse>(`${this.baseUrl}/${id}/estado`, payload);
+  cancelarReserva(id: number): Observable<GetMensajeResponse> {
+    return this.http.put<GetMensajeResponse>(`${this.baseUrl}/${id}/cancelar`, {});
+  }
+
+  terminarReserva(id: number): Observable<GetMensajeResponse> {
+    return this.http.put<GetMensajeResponse>(`${this.baseUrl}/${id}/terminar`, {});
   }
 }
