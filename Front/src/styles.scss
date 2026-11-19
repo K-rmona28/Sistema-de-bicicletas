@@ -1,0 +1,51 @@
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+:root {
+  --bg: #ffffff;
+  --bg-soft: #f5f7fa;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+
+  --accent-start: #0fd1e6;
+  --accent-end: #087e8b;
+  --accent-text: #0b86a8;   // cian más oscuro y algo más azul, para que se lea sobre blanco
+
+  // Material usa tu cian en vez del de su paleta
+  --mat-sys-primary: #0fd1e6;
+  --mat-sys-on-primary: #0b1f24;
+  --mat-sys-secondary-container: rgba(15, 209, 230, 0.16);   // item activo de la lista
+  --mat-sys-on-secondary-container: #0b6f8a;
+}
+.bike-dialog {
+  --mat-dialog-container-shape: 20px;
+}
+.rent-dialog {
+  --mat-dialog-container-color: #e8e8e8;
+  --mat-dialog-container-shape: 28px;
+}
+
+.rent-dialog .mat-mdc-dialog-surface {
+  overflow: hidden;
+}
+body {
+  color-scheme: light;
+  background-color: var(--bg);
+  color: var(--text-main);
+  font: var(--mat-sys-body-medium);
+  margin: 0;
+  height: 100%;
+}
